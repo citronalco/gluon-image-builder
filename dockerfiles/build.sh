@@ -18,6 +18,7 @@ if [ ! -d .git ]; then
 fi
 git fetch origin
 git checkout ${GLUON_GIT_BRANCH}
+git pull
 GLUON_COMMIT=$(git rev-list --max-count=1 HEAD)
 
 # Site aktualisieren und auf gewählten Branch wechseln
@@ -29,6 +30,7 @@ if [ ! -d .git ]; then
 fi
 git fetch origin
 git checkout ${SITE_GIT_BRANCH}
+git pull
 SITE_COMMIT=$(git rev-list --max-count=1 HEAD)
 
 # Gluon-Variablen setzen
