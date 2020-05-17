@@ -1,0 +1,5 @@
+TODO:
+- Zuerst gluon-Repository klonen und dann Dockerfile aus dessen contrib-Verzeichnis als Grundlage nutzen
+- distcc/icecream verwenden
+
+

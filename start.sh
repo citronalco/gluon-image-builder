@@ -1,5 +1,10 @@
 #!/bin/bash
-# TOOD: Besser(?): Zuerst gluon klonen, dann gleich das Dockerfile aus contrib als Grundlage nutzen
+
+if [ ! -f ./config.env ]; then
+    echo "ERROR: config.env is missing."
+    exit 1
+fi
+
 docker build --tag gluon-build-machine ./dockerfiles
 
 docker run \
@@ -9,6 +14,3 @@ docker run \
     --env HOST_UID=$(id -u) --env HOST_GID=$(id -g) \
     --env-file ./config.env \
     gluon-build-machine
-
-# TODO:
-# - ccache (Testen ob's was bringt)/distcc/icecream?
