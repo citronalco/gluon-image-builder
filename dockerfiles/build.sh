@@ -11,7 +11,7 @@ fi
 ### setpriv ändert $HOME nicht, steht nach wie vor auf /root. Darum manuell setzen
 HOME=/gluon
 
-### Gluon aktualisieren und auf gewählten Branch wechseln
+### Gluon auschecken und auf gewählten Branch wechseln
 cd /gluon
 
 if [ ! -d .git ]; then
@@ -24,7 +24,7 @@ git pull
 
 GLUON_COMMIT=$(git rev-list --max-count=1 HEAD)
 
-### "Site" aktualisieren und auf gewählten Branch wechseln
+### "Site" auschecken und auf gewählten Branch wechseln
 mkdir -p /gluon/site
 cd /gluon/site
 
@@ -54,11 +54,11 @@ fi
 make update
 
 for TARGET in ${TARGETS}; do
-    # Mit Debug-Optionen bauen wenn die Variable "DEBUG" auf true/TRUE/yes/YES/1 gesetzt wurde
+    # DEBUG gesetzt: Mit Debug-Optionen bauen
     if [[ ":true:TRUE:yes:YES:1:" = *:${DEBUG}:* ]]; then
 	make GLUON_TARGET=$TARGET -j1 V=s || exit 1
     else
-    # DEBUG nicht gesetzt. Wenn Build beim ersten Mal abbricht Build-Verzeichnis aufräumen und noch ein letztes Mal versuchen
+    # DEBUG nicht gesetzt: Wenn Build beim ersten Mal abbricht Build-Verzeichnis aufräumen und noch ein letztes Mal versuchen
 	if ! make GLUON_TARGET=${TARGET} -j$(nproc); then
 	    make dirclean
 	    make GLUON_TARGET=${TARGET} -j$(nproc) || exit 1
@@ -78,6 +78,7 @@ GLUON_RELEASE=${GLUON_RELEASE}
 EOF
 
 ### Manifest-Dateien erstellen
+mkdir -p tmp
 for BRANCH in ${MANIFEST_BRANCHES}; do
     make manifest GLUON_BRANCH=${BRANCH/:*/} GLUON_PRIORITY=${BRANCH/*:/}
 
