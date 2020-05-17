@@ -1,4 +1,7 @@
-# Bernies Gluon-Bau-Container
+# Gluon Image Builder
+
+Baut Gluon Firmware-Images anhand einer Konfigurationsdatei in einem Docker-Container.
+
 ## Anleitung:
 
 1. `config.env.example` kopieren zu `config.env`
