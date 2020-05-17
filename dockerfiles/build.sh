@@ -54,14 +54,23 @@ fi
 make update
 
 for TARGET in ${TARGETS}; do
-    # DEBUG gesetzt: Mit Debug-Optionen bauen
     if [[ ":true:TRUE:yes:YES:1:" = *:${DEBUG}:* ]]; then
+	# DEBUG gesetzt
 	make GLUON_TARGET=$TARGET -j1 V=s || exit 1
     else
-    # DEBUG nicht gesetzt: Wenn Build beim ersten Mal abbricht Build-Verzeichnis aufräumen und noch ein letztes Mal versuchen
+	# DEBUG nicht gesetzt
+	# Eskalationsstufen bei Build-Fehlern laut Gluon-Doku
 	if ! make GLUON_TARGET=${TARGET} -j$(nproc); then
-	    make dirclean
-	    make GLUON_TARGET=${TARGET} -j$(nproc) || exit 1
+	    make clean GLUON_TARGET=${TARGET}
+
+	    if ! make GLUON_TARGET=${TARGET} -j$(nproc); then
+		make dirclean
+		mkdir -p tmp
+
+		if ! make GLUON_TARGET=${TARGET} -j$(nproc); then
+		    exit 1
+		fi
+	    fi
 	fi
     fi
 done
@@ -78,7 +87,6 @@ GLUON_RELEASE=${GLUON_RELEASE}
 EOF
 
 ### Manifest-Dateien erstellen
-mkdir -p tmp
 for BRANCH in ${MANIFEST_BRANCHES}; do
     make manifest GLUON_BRANCH=${BRANCH/:*/} GLUON_PRIORITY=${BRANCH/*:/}
 
