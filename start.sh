@@ -5,7 +5,7 @@ if [ ! -f ./config.env ]; then
     exit 1
 fi
 
-docker build --tag gluon-build-machine ./dockerfiles
+docker build --tag gluon-build-container ./dockerfiles
 
 docker run \
     -ti --init \
@@ -13,4 +13,4 @@ docker run \
     --volume $(pwd)/images:/images \
     --env HOST_UID=$(id -u) --env HOST_GID=$(id -g) \
     --env-file ./config.env \
-    gluon-build-machine
+    gluon-build-container

@@ -6,7 +6,7 @@ RUN apt-get update && \
       apt-get install -y --no-install-recommends ca-certificates file && \
       rm -rf /var/lib/apt/lists/*
 
-# Buildskript kopiern und als Startskript definieren
+# Buildskript kopieren und als Startskript definieren
 COPY build.sh /build.sh
 
 ENTRYPOINT /build.sh
