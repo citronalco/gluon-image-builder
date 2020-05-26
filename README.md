@@ -6,6 +6,7 @@ Baut Gluon Firmware-Images anhand einer Konfigurationsdatei in einem Docker-Cont
 
 1. `config.env.example` kopieren zu `config.env`
 2. `config.env` anpassen:
+
    **Erforderliche Variablen:**
    - `GLUON_GIT_URL`
    - `GLUON_GIT_BRANCH`
