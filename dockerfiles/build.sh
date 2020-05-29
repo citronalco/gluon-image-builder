@@ -19,7 +19,7 @@ if [ ! -d .git ]; then
     git remote add origin ${GLUON_GIT_URL}
 fi
 git fetch origin
-git checkout ${GLUON_GIT_BRANCH}
+git checkout ${GLUON_GIT_BRANCH} || exit 1
 git pull
 
 GLUON_COMMIT=$(git rev-list --max-count=1 HEAD)
@@ -33,7 +33,7 @@ if [ ! -d .git ]; then
     git remote add origin ${SITE_GIT_URL}
 fi
 git fetch origin
-git checkout ${SITE_GIT_BRANCH}
+git checkout ${SITE_GIT_BRANCH} || exit 1
 git pull
 
 SITE_COMMIT=$(git rev-list --max-count=1 HEAD)
