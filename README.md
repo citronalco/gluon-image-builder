@@ -33,6 +33,9 @@ Baut Gluon Firmware-Images anhand einer Konfigurationsdatei in einem Docker-Cont
    - `DEBUG`: Wenn "DEBUG" auf "true" gesetzt ist, wird Gluon mit den für das Debugging des Build-Prozesses empfohlenen make-Optionen "-j1 V=s" gebaut. Standardwert ist "false".
    - `VPN_TYPES`: Nur relevant für Freifunk Ingolstadt: Wahl der VPN-Techniken, für die Images gebaut werden sollen. Mögliche Werte siehe https://git.bingo-ev.de/freifunk/ffin-site/blob/master/site.mk
 
+   Es können weitere Variablen in config.env angegeben werden (siehe https://gluon.readthedocs.io/en/latest/user/site.html#user-site-build-configuration).
+   Diese werden dann einfach zum Gluon-Build-Prozess durchgereicht.
+
 3. `./start.sh`
 
 Der Gluon-Quellcode wird ins Unterverzeichnis `./gluon` heruntergeladen und dort compiliert. Die fertigen Firmware-Images landen im Unterverzeichnis `./images`.
