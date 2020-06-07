@@ -8,13 +8,12 @@ if [ $(id -u) -eq 0 ]; then
     exec setpriv --reuid=${HOST_UID} --regid=${HOST_GID} --clear-groups "$0"
 fi
 
-### setpriv ändert $HOME nicht, steht nach wie vor auf /root. Darum manuell setzen
+
+# setpriv ändert $HOME nicht, steht nach wie vor auf /root. Darum manuell setzen
 HOME=/gluon
 
-[ -z "${GLUON_DEPRECATED}" ] && export GLUON_DEPRECATED="full"
-
-### Quellcodes besorgen
-# Gluon auschecken und auf gewählten Branch wechseln
+##### Quellcodes besorgen
+# Gluon-Quellcode auschecken und auf gewählten Branch wechseln
 cd /gluon
 
 if [ ! -d .git ]; then
@@ -24,7 +23,7 @@ fi
 git fetch origin
 git checkout ${GLUON_GIT_BRANCH} || exit 1
 git pull
-
+# letzten Gluon-Commit ermitteln. Wird für build_info.txt verwendet
 GLUON_COMMIT=$(git rev-list --max-count=1 HEAD)
 
 # Site-Konfiguration auschecken und auf gewählten Branch wechseln
@@ -38,13 +37,17 @@ fi
 git fetch origin
 git checkout ${SITE_GIT_BRANCH} || exit 1
 git pull
-
+# letzten Site-Commit ermitteln. Wird für build_info.txt verwendet
 SITE_COMMIT=$(git rev-list --max-count=1 HEAD)
+
+##### Bauen
+cd /gluon
+
+# GLUON_RELEASE setzen. Wird für Dateinamen der Images verwendet
 export GLUON_RELEASE=$(make show-release)
 
-
-### Bauen
-cd /gluon
+# Variable GLUON_DEPRECATED setzen
+[ -z "${GLUON_DEPRECATED}" ] && export GLUON_DEPRECATED="full"
 
 # Build-Targets setzen: Wenn Benutzer die Variable "TARGET" nicht oder auf "all" oder "ALL" gesetzt hat: TARGET mit allen verfügbaren Targets füllen
 if [ -z "${TARGETS}" ] || [[ ":all:ALL:" = *:${TARGETS}:* ]]; then
@@ -94,13 +97,13 @@ for IMAGEDIR in "${!VPNTYPEIMAGES[@]}"; do
 
     ### build_info.txt-Datei anlegen
     cat > ${GLUON_IMAGEDIR}/build_info.txt << EOF
-    GLUON_COMMIT=${GLUON_COMMIT}
-    GLUON_BASE=${GLUON_GIT_BRANCH}
-    GLUON_REPO_URL=${GLUON_GIT_URL}
-    SITE_COMMIT=${SITE_COMMIT}
-    SITE_BASE=${SITE_GIT_BRANCH}
-    SITE_REPO_URL=${GLUON_GIT_URL}
-    GLUON_RELEASE=${GLUON_RELEASE}
+GLUON_COMMIT=${GLUON_COMMIT}
+GLUON_BASE=${GLUON_GIT_BRANCH}
+GLUON_REPO_URL=${GLUON_GIT_URL}
+SITE_COMMIT=${SITE_COMMIT}
+SITE_BASE=${SITE_GIT_BRANCH}
+SITE_REPO_URL=${GLUON_GIT_URL}
+GLUON_RELEASE=${GLUON_RELEASE}
 EOF
 
     ### Manifest-Dateien erstellen
