@@ -9,7 +9,7 @@ Baut Gluon Firmware-Images anhand einer Konfigurationsdatei in einem Docker-Cont
    ```
    # Erforderlich:
    GLUON_GIT_URL=<URL zum Gluon-Repository>
-   GLUON_GIT_BRANCH=<Branch im Gluon-Repository>
+   GLUON_RELEASE=<Branch im Gluon-Repository>
    SITE_GIT_URL=<URL zum Site-Repository>
    SITE_GIT_BRANCH=<Branch im Site-Repository>
 
@@ -23,7 +23,7 @@ Baut Gluon Firmware-Images anhand einer Konfigurationsdatei in einem Docker-Cont
 
    **Erforderliche Variablen:**
    - `GLUON_GIT_URL`
-   - `GLUON_GIT_BRANCH`
+   - `GLUON_RELEASE`
    - `SITE_GIT_URL`
    - `SITE_GIT_BRANCH`
 

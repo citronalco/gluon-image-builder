@@ -21,7 +21,7 @@ if [ ! -d .git ]; then
     git remote add origin ${GLUON_GIT_URL}
 fi
 git fetch origin
-git checkout ${GLUON_GIT_BRANCH} || exit 1
+git checkout ${GLUON_RELEASE} || exit 1
 git pull
 # letzten Gluon-Commit ermitteln. Wird für build_info.txt verwendet
 GLUON_COMMIT=$(git rev-list --max-count=1 HEAD)
@@ -98,7 +98,7 @@ for IMAGEDIR in "${!VPNTYPEIMAGES[@]}"; do
     ### build_info.txt-Datei anlegen
     cat > ${GLUON_IMAGEDIR}/build_info.txt << EOF
 GLUON_COMMIT=${GLUON_COMMIT}
-GLUON_BASE=${GLUON_GIT_BRANCH}
+GLUON_BASE=${GLUON_RELEASE}
 GLUON_REPO_URL=${GLUON_GIT_URL}
 SITE_COMMIT=${SITE_COMMIT}
 SITE_BASE=${SITE_GIT_BRANCH}
