@@ -2,6 +2,10 @@
 
 Baut Gluon Firmware-Images anhand einer Konfigurationsdatei in einem Docker-Container.
 
+## Voraussetzungen:
+- Linux-Rechner mit installiertem Docker und Docker-Compose
+- mindestens 150 GByte freier Festplattenplatz
+
 ## Anleitung:
 
 1. `config.env.example` kopieren zu `config.env`
@@ -39,3 +43,4 @@ Baut Gluon Firmware-Images anhand einer Konfigurationsdatei in einem Docker-Cont
 3. `./start.sh`
 
 Der Gluon-Quellcode wird ins Unterverzeichnis `./gluon` heruntergeladen und dort compiliert. Die fertigen Firmware-Images landen im Unterverzeichnis `./images`.
+Das Compilieren der Firmware für alle verfügbaren Targets dauert einige Stunden.
