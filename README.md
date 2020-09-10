@@ -1,6 +1,6 @@
 # Gluon Image Builder
 
-Baut Gluon Firmware-Images anhand einer Konfigurationsdatei in einem Docker-Container.
+Baut Gluon Firmware-Images für Freifunk in einem Docker-Container anhand einer einfachen Konfigurationsdatei.
 
 ## Voraussetzungen:
 - Linux-Rechner mit installiertem Docker und Docker-Compose
