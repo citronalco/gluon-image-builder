@@ -26,14 +26,14 @@ Baut Gluon Firmware-Images für Freifunk in einem Docker-Container anhand einer 
    ```
 
    **Erforderliche Variablen:**
-   - `GLUON_GIT_URL`
-   - `GLUON_RELEASE`
-   - `SITE_GIT_URL`
-   - `SITE_GIT_BRANCH`
+   - `GLUON_GIT_URL`: URL zum Git-Repository von Gluon, z.B. für das offizielle Gluon-Repository: "https://github.com/freifunk-gluon/gluon.git"
+   - `GLUON_RELEASE`: zu verwendender Branch im Gluon-Repository, z.B. "v2019.2", "master", "next",...
+   - `SITE_GIT_URL`: URL zum Git-Repository der Site-Konfiguration deiner Freifunk-Community
+   - `SITE_GIT_BRANCH`: zu verwendender Branch im Git-Repository der Site-Konfiguration
 
    **Optionale Variablen:**
    - `MANIFEST_BRANCHES` und `ECDSA_PRIVATE_KEYS`: Wenn "MANIFEST_BRANCHES" gesetzt ist werden die entsprechenden Manifest-Dateien für den Autoupdater mit der angegebenen Autoupdater-Priorität erstellt und, wenn "ECDSA_PRIVATE_KEYS" gesetzt ist, mit dem/den dort angegebenen Key(s) signiert.
-   - `TARGETS`: Hier können die Targets angegeben werden, für die Images gebaut werden sollen. Fehlt die Variable oder ist sie auf "all" gesetzt, werden Images für alle verfügbaren Targets erstellt.
+   - `TARGETS`: Hier können die Targets (z.B. "ath79-generic ramips-mt76x8") angegeben werden, für die Images gebaut werden sollen. Fehlt die Variable oder ist sie auf "all" gesetzt, werden Images für alle verfügbaren Targets erstellt.
    - `DEBUG`: Wenn "DEBUG" auf "true" gesetzt ist, wird Gluon mit den für das Debugging des Build-Prozesses empfohlenen make-Optionen "-j1 V=s" gebaut. Standardwert ist "false".
    - `VPN_TYPES`: Nur relevant für Freifunk Ingolstadt, sonst weglassen: Wahl der VPN-Techniken, für die Images gebaut werden sollen. Mögliche Werte siehe https://git.bingo-ev.de/freifunk/ffin-site/blob/master/site.mk
 
