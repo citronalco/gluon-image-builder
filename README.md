@@ -39,5 +39,7 @@ Baut Gluon Firmware-Images für Freifunk in einem Docker-Container anhand einer 
 
    Wenn Variablen zum Gluon-Build-Prozess durchgereicht werden sollen (siehe https://gluon.readthedocs.io/en/latest/user/site.html#user-site-build-configuration): Einfach auch in die config.env eintragen.
 
-3. `./start.sh` - Der Gluon-Quellcode wird ins Unterverzeichnis `./gluon` heruntergeladen und dort compiliert. Die fertigen Firmware-Images landen im Unterverzeichnis `./images`.
+3. `./start.sh` ausführen.
+
+Der Gluon-Quellcode wird ins Unterverzeichnis `./gluon` heruntergeladen und dort compiliert. Die fertigen Firmware-Images landen im Unterverzeichnis `./images`.
 Das Compilieren der Firmware für alle verfügbaren Targets dauert einige Stunden.
