@@ -44,6 +44,11 @@ git checkout "${SITE_GIT_BRANCH}" || exit 1
 git pull
 
 
+# OpenWRT aktualisieren
+cd /gluon
+make update || exit 1
+
+
 ########################################
 ##### Bauen ############################
 ########################################
@@ -66,9 +71,6 @@ else
 	VPNTYPEDIRS["/images/${TYPE}"]="${TYPE}"
     done
 fi
-
-# OpenWRT aktualisieren
-make update
 
 # Für jeden VPN-Typ....
 for DIR in "${!VPNTYPEDIRS[@]}"; do
