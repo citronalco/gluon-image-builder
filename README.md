@@ -13,7 +13,7 @@ Baut Gluon Firmware-Images für Freifunk in einem Docker-Container anhand einer 
    ```
    # Erforderlich:
    GLUON_GIT_URL=<URL zum Gluon-Repository>
-   GLUON_RELEASE=<Branch im Gluon-Repository>
+   GLUON_GIT_BRANCH=<Branch im Gluon-Repository>
    SITE_GIT_URL=<URL zum Site-Repository>
    SITE_GIT_BRANCH=<Branch im Site-Repository>
 
@@ -27,7 +27,7 @@ Baut Gluon Firmware-Images für Freifunk in einem Docker-Container anhand einer 
 
    **Erforderliche Variablen:**
    - `GLUON_GIT_URL`: URL zum Git-Repository von Gluon, z.B. für das offizielle Gluon-Repository: "https://github.com/freifunk-gluon/gluon.git"
-   - `GLUON_RELEASE`: zu verwendender Branch im Gluon-Repository, z.B. "v2019.2", "master", "next",...
+   - `GLUON_GIT_BRANCH`: zu verwendender Branch im Gluon-Repository, z.B. "v2019.2", "master", "next",...
    - `SITE_GIT_URL`: URL zum Git-Repository der Site-Konfiguration deiner Freifunk-Community
    - `SITE_GIT_BRANCH`: zu verwendender Branch im Git-Repository der Site-Konfiguration
 
