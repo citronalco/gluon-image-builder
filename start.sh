@@ -9,8 +9,8 @@ docker build --tag gluon-build-container ./dockerfiles
 
 docker run \
     -ti --init \
-    --volume $(pwd)/gluon:/gluon \
-    --volume $(pwd)/images:/images \
-    --env HOST_UID=$(id -u) --env HOST_GID=$(id -g) \
+    --volume "$(pwd)/gluon:/gluon" \
+    --volume "$(pwd)/images:/images" \
+    --env HOST_UID="$(id -u)" --env HOST_GID="$(id -g)" \
     --env-file ./config.env \
     gluon-build-container

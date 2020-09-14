@@ -5,16 +5,16 @@
 
 # Wenn dieses Skript als root aufgerufen wird: Das Skript nochmal mit dem User aufrufen, der auch den Container gestartet hat.
 # So gehören dann der heruntergeladene Quellcode und die erzeugten Images dem aufrufenden Benutzer und nicht root
-if [ $(id -u) -eq 0 ]; then
-    chown ${HOST_UID}:${HOST_GID} /gluon
-    chown ${HOST_UID}:${HOST_GID} /images
-    exec setpriv --reuid=${HOST_UID} --regid=${HOST_GID} --clear-groups "$0"
+if [ "$(id -u)" -eq 0 ]; then
+    chown "${HOST_UID}":"${HOST_GID}" /gluon
+    chown "${HOST_UID}":"${HOST_GID}" /images
+
+    exec setpriv --reuid="${HOST_UID}" --regid="${HOST_GID}" --clear-groups "$0"
 fi
 
 
 # setpriv ändert $HOME nicht, steht nach wie vor auf /root. Darum manuell setzen
 HOME=/gluon
-
 
 ########################################
 ##### Quellcodes besorgen ##############
@@ -24,10 +24,10 @@ cd /gluon
 
 if [ ! -d .git ]; then
     git init
-    git remote add origin ${GLUON_GIT_URL}
+    git remote add origin "${GLUON_GIT_URL}"
 fi
 git fetch origin
-git checkout ${GLUON_GIT_BRANCH} || exit 1
+git checkout "${GLUON_GIT_BRANCH}" || exit 1
 git pull
 
 
@@ -37,10 +37,10 @@ cd /gluon/site
 
 if [ ! -d .git ]; then
     git init
-    git remote add origin ${SITE_GIT_URL}
+    git remote add origin "${SITE_GIT_URL}"
 fi
 git fetch origin
-git checkout ${SITE_GIT_BRANCH} || exit 1
+git checkout "${SITE_GIT_BRANCH}" || exit 1
 git pull
 
 
@@ -83,18 +83,18 @@ for DIR in "${!VPNTYPEDIRS[@]}"; do
     for TARGET in ${TARGETS}; do
 	if [[ ":true:TRUE:yes:YES:1:" = *:${DEBUG}:* ]]; then
 	    # DEBUG gesetzt
-	    make GLUON_TARGET=${TARGET} -j1 V=s || exit 1
+	    make GLUON_TARGET="${TARGET}" -j1 V=s || exit 1
 	else
 	    # DEBUG nicht gesetzt
 	    # Eskalationsstufen bei Build-Fehlern laut Gluon-Doku
-	    if ! make GLUON_TARGET=${TARGET} -j$(nproc); then
-		make clean GLUON_TARGET=${TARGET}
+	    if ! make GLUON_TARGET="${TARGET}" -j"$(nproc)"; then
+		make clean GLUON_TARGET="${TARGET}"
 
-		if ! make GLUON_TARGET=${TARGET} -j$(nproc); then
+		if ! make GLUON_TARGET="${TARGET}" -j"$(nproc)"; then
 		    make dirclean
 		    mkdir -p tmp
 
-		    if ! make GLUON_TARGET=${TARGET} -j$(nproc); then
+		    if ! make GLUON_TARGET="${TARGET}" -j"$(nproc)"; then
 		    exit 1
 		    fi
 		fi
@@ -103,7 +103,7 @@ for DIR in "${!VPNTYPEDIRS[@]}"; do
     done
 
     ### build_info.txt-Datei anlegen
-    cat > ${DIR}/build_info.txt << EOF
+    cat > "${DIR}"/build_info.txt << EOF
 GLUON_RELEASE=${GLUON_RELEASE}
 GLUON_REPO_URL=${GLUON_GIT_URL}
 GLUON_BASE=${GLUON_GIT_BRANCH}
@@ -119,11 +119,11 @@ EOF
     ### Manifest-Dateien erstellen
     for BRANCH in ${MANIFEST_BRANCHES}; do
 	make manifest \
-	    GLUON_AUTOUPDATER_BRANCH=${BRANCH/:*/} GLUON_BRANCH=${BRANCH/:*/} GLUON_PRIORITY=${BRANCH/*:/}
+	    GLUON_AUTOUPDATER_BRANCH="${BRANCH/:*/}" GLUON_BRANCH="${BRANCH/:*/}" GLUON_PRIORITY="${BRANCH/*:/}"
 
 	# Signieren
 	for KEY in ${ECDSA_PRIVATE_KEYS}; do
-	    contrib/sign.sh <(echo ${KEY}) $GLUON_IMAGEDIR/sysupgrade/${BRANCH/:*/}.manifest
+	    contrib/sign.sh <(echo "${KEY}") "${GLUON_IMAGEDIR}"/sysupgrade/"${BRANCH/:*/}".manifest
 	done
     done
 done
