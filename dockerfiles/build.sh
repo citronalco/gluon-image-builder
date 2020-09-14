@@ -43,6 +43,7 @@ git fetch origin
 git checkout ${SITE_GIT_BRANCH} || exit 1
 git pull
 
+
 ########################################
 ##### Bauen ############################
 ########################################
@@ -56,13 +57,13 @@ if [ -z "${TARGETS}" ] || [[ ":all:ALL:" = *:${TARGETS}:* ]]; then
     TARGETS=$(make list-targets)
 fi
 
-# VPN-Typen und zugehöriges Ausgabeverzeichnis festlegen
-declare -A VPNTYPEIMAGES
+# Ein Ausgabeverzeichnis für jeden VPN-Typ festlegen
+declare -A VPNTYPEDIRS
 if [ -z "${VPN_TYPES}" ]; then
-    VPNTYPEIMAGES["/images"]=""
+    VPNTYPEDIRS["/images"]=""
 else
     for TYPE in ${VPN_TYPES}; do
-	VPNTYPEIMAGES["/images/${TYPE}"]="${TYPE}"
+	VPNTYPEDIRS["/images/${TYPE}"]="${TYPE}"
     done
 fi
 
@@ -70,9 +71,10 @@ fi
 make update
 
 # Für jeden VPN-Typ....
-for IMAGEDIR in "${!VPNTYPEIMAGES[@]}"; do
-    export VPN_TYPE="${VPNTYPEIMAGES[${IMAGEDIR}]}"
-    export GLUON_IMAGEDIR="${IMAGEDIR}"
+for DIR in "${!VPNTYPEDIRS[@]}"; do
+
+    export VPN_TYPE="${VPNTYPEDIRS[${DIR}]}"
+    export GLUON_IMAGEDIR="${DIR}"
 
     # GLUON_RELEASE setzen. Wird für Dateinamen der Images verwendet
     export GLUON_RELEASE=$(make show-release)
@@ -101,14 +103,14 @@ for IMAGEDIR in "${!VPNTYPEIMAGES[@]}"; do
     done
 
     ### build_info.txt-Datei anlegen
-    cat > ${GLUON_IMAGEDIR}/build_info.txt << EOF
-GLUON_COMMIT=$(git --git-dir /gluon/.git rev-list --max-count=1 HEAD)
-GLUON_BASE=${GLUON_GIT_BRANCH}
-GLUON_REPO_URL=${GLUON_GIT_URL}
-SITE_COMMIT=$(git --git-dir /gluon/site/.git rev-list --max-count=1 HEAD)
-SITE_BASE=${SITE_GIT_BRANCH}
-SITE_REPO_URL=${GLUON_GIT_URL}
+    cat > ${DIR}/build_info.txt << EOF
 GLUON_RELEASE=${GLUON_RELEASE}
+GLUON_REPO_URL=${GLUON_GIT_URL}
+GLUON_BASE=${GLUON_GIT_BRANCH}
+GLUON_COMMIT=$(git --git-dir /gluon/.git rev-list --max-count=1 HEAD)
+SITE_REPO_URL=${SITE_GIT_URL}
+SITE_BASE=${SITE_GIT_BRANCH}
+SITE_COMMIT=$(git --git-dir /gluon/site/.git rev-list --max-count=1 HEAD)
 EOF
 
 ########################################
