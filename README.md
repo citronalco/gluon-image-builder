@@ -3,7 +3,7 @@
 Baut Gluon Firmware-Images für Freifunk in einem Docker-Container anhand einer einfachen Konfigurationsdatei.
 
 ## Voraussetzungen:
-- Linux-Rechner mit installiertem Docker und Docker-Compose
+- Linux-Rechner mit installiertem Docker und Docker-Compose (Debian/Ubuntu/Mint: `sudo apt-get install docker-compose docker.io`)
 - mindestens 150 GByte freier Festplattenplatz
 
 ## Anleitung:
