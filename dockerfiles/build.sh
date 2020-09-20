@@ -25,6 +25,8 @@ cd /gluon
 if [ ! -d .git ]; then
     git init
     git remote add origin "${GLUON_GIT_URL}"
+else
+    git remote set-url origin "${GLUON_GIT_URL}"
 fi
 git fetch origin
 git checkout "${GLUON_GIT_BRANCH}" || exit 1
@@ -38,6 +40,8 @@ cd /gluon/site
 if [ ! -d .git ]; then
     git init
     git remote add origin "${SITE_GIT_URL}"
+else
+    git remote set-url origin "${SITE_GIT_URL}"
 fi
 git fetch origin
 git checkout "${SITE_GIT_BRANCH}" || exit 1
