@@ -14,49 +14,54 @@ fi
 
 
 # setpriv ändert $HOME nicht, steht nach wie vor auf /root. Darum manuell setzen
-HOME=/gluon
+export HOME=/gluon
 
-########################################
-##### Quellcodes besorgen ##############
-########################################
-# Gluon-Quellcode auschecken und auf gewählten Branch wechseln
-cd /gluon
+if [ -n "${GLUON_GIT_URL}" ] && [ -n "${GLUON_GIT_BRANCH}" ]; then
+    echo
+    echo "####################################################################################"
+    echo "## GLUON IMAGE BUILDER: Fetching Gluon source from ${GLUON_GIT_URL}/${GLUON_GIT_BRANCH}"
+    echo "####################################################################################"
 
-if [ ! -d .git ]; then
-    git init
-    git remote add origin "${GLUON_GIT_URL}"
-else
-    git remote set-url origin "${GLUON_GIT_URL}"
+    cd /gluon
+
+    if [ ! -d .git ]; then
+	git init
+	git remote add origin "${GLUON_GIT_URL}"
+    else
+	git remote set-url origin "${GLUON_GIT_URL}"
+    fi
+    git fetch origin || exit 1
+    git checkout "${GLUON_GIT_BRANCH}" || exit 1
+    git pull || exit 1
 fi
-git fetch origin
-git checkout "${GLUON_GIT_BRANCH}" || exit 1
-git pull
 
+if [ -n "${SITE_GIT_URL}" ] && [ -n "${SITE_GIT_BRANCH}" ]; then
+    echo
+    echo "####################################################################################"
+    echo "## GLUON IMAGE BUILDER: Fetching Site source from ${SITE_GIT_URL}/${SITE_GIT_BRANCH}"
+    echo "####################################################################################"
 
-# Site-Konfiguration auschecken und auf gewählten Branch wechseln
-mkdir -p /gluon/site
-cd /gluon/site
+    mkdir -p /gluon/site
+    cd /gluon/site
 
-if [ ! -d .git ]; then
-    git init
-    git remote add origin "${SITE_GIT_URL}"
-else
-    git remote set-url origin "${SITE_GIT_URL}"
+    if [ ! -d .git ]; then
+	git init
+	git remote add origin "${SITE_GIT_URL}"
+    else
+	git remote set-url origin "${SITE_GIT_URL}"
+    fi
+    git fetch origin || exit 1
+    git checkout "${SITE_GIT_BRANCH}" || exit 1
+    git pull || exit 1
 fi
-git fetch origin
-git checkout "${SITE_GIT_BRANCH}" || exit 1
-git pull
 
-
-# OpenWRT aktualisieren
+echo
+echo "####################################################################################"
+echo "## GLUON IMAGE BUILDER: Updating OpenWRT"
+echo "####################################################################################"
 cd /gluon
 make update || exit 1
 
-
-########################################
-##### Bauen ############################
-########################################
-cd /gluon
 
 # Variable GLUON_DEPRECATED setzen
 [ -z "${GLUON_DEPRECATED}" ] && export GLUON_DEPRECATED="full"
@@ -76,35 +81,42 @@ else
     done
 fi
 
+
 # Für jeden VPN-Typ....
 for DIR in "${!VPNTYPEDIRS[@]}"; do
-
+    export GLUON_IMAGEDIR="${DIR}"		# Ausgabeverzeichnis für die Images
+    export GLUON_RELEASE=$(make show-release)	# wird für Dateinamen der Images verwendet
     export VPN_TYPE="${VPNTYPEDIRS[${DIR}]}"
-    export GLUON_IMAGEDIR="${DIR}"
-
-    # GLUON_RELEASE setzen. Wird für Dateinamen der Images verwendet
-    export GLUON_RELEASE=$(make show-release)
 
     # ...für jedes Target compilieren
     for TARGET in ${TARGETS}; do
+	echo
+	echo "####################################################################################"
+	echo "## GLUON IMAGE BUILDER: Building target ${TARGET} ${VPN_TYPE}"
+	echo "####################################################################################"
 	if [[ ":true:TRUE:yes:YES:1:" = *:${DEBUG}:* ]]; then
 	    # DEBUG gesetzt
 	    make GLUON_TARGET="${TARGET}" -j1 V=s || exit 1
 	else
 	    # DEBUG nicht gesetzt
-	    # Eskalationsstufen bei Build-Fehlern laut Gluon-Doku
 	    if ! make GLUON_TARGET="${TARGET}" -j"$(nproc)"; then
-		make clean GLUON_TARGET="${TARGET}"
+		make clean GLUON_TARGET="${TARGET}"	# Gluon-Doku: "Ensure all packages are rebuilt for a single target. This is usually not necessary, but may fix certain kinds of build failures."
 
 		if ! make GLUON_TARGET="${TARGET}" -j"$(nproc)"; then
-		    make dirclean
+		    make dirclean	# Gluon-Doku: "Clean the entire tree, so the toolchain will be rebuilt as well, which will take a while."
 		    mkdir -p tmp
 
 		    if ! make GLUON_TARGET="${TARGET}" -j"$(nproc)"; then
-		    exit 1
+			echo "####################################################################################"
+			echo "## GLUON IMAGE BUILDER: ERROR - Could not build target ${TARGET} ${VPN_TYPE}"
+			echo "####################################################################################"
+			exit 1
 		    fi
 		fi
 	    fi
+	    echo "####################################################################################"
+	    echo "## GLUON IMAGE BUILDER: Sucessfully built target ${TARGET} ${VPN_TYPE}"
+	    echo "####################################################################################"
 	fi
     done
 
@@ -119,17 +131,17 @@ SITE_BASE=${SITE_GIT_BRANCH}
 SITE_COMMIT=$(git --git-dir /gluon/site/.git rev-list --max-count=1 HEAD)
 EOF
 
-########################################
-##### Manifest #########################
-########################################
     ### Manifest-Dateien erstellen
     for BRANCH in ${MANIFEST_BRANCHES}; do
+	echo
+	echo "####################################################################################"
+	echo "## GLUON IMAGE BUILDER: Creating Manifest for ${BRANCH/:*/} ${VPN_TYPE}"
+	echo "####################################################################################"
 	make manifest \
-	    GLUON_AUTOUPDATER_BRANCH="${BRANCH/:*/}" GLUON_BRANCH="${BRANCH/:*/}" GLUON_PRIORITY="${BRANCH/*:/}"
+	    GLUON_AUTOUPDATER_BRANCH="${BRANCH/:*/}" GLUON_BRANCH="${BRANCH/:*/}" GLUON_PRIORITY="${BRANCH/*:/}" || exit 1
 
-	# Signieren
 	for KEY in ${ECDSA_PRIVATE_KEYS}; do
-	    contrib/sign.sh <(echo "${KEY}") "${GLUON_IMAGEDIR}"/sysupgrade/"${BRANCH/:*/}".manifest
+	    contrib/sign.sh <(echo "${KEY}") "${GLUON_IMAGEDIR}"/sysupgrade/"${BRANCH/:*/}".manifest || exit 1
 	done
     done
 done
