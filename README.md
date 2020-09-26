@@ -35,11 +35,12 @@ Baut Gluon Firmware-Images für Freifunk in einem Docker-Container anhand einer 
    - `MANIFEST_BRANCHES` und `ECDSA_PRIVATE_KEYS`: Wenn "MANIFEST_BRANCHES" gesetzt ist werden die entsprechenden Manifest-Dateien für den Autoupdater mit der angegebenen Autoupdater-Priorität erstellt und, wenn "ECDSA_PRIVATE_KEYS" gesetzt ist, mit dem/den dort angegebenen Key(s) signiert.
    - `TARGETS`: Hier können die Targets (z.B. "ath79-generic ramips-mt76x8") angegeben werden, für die Images gebaut werden sollen. Fehlt die Variable oder ist sie auf "all" gesetzt, werden Images für alle verfügbaren Targets erstellt.
    - `DEBUG`: Wenn "DEBUG" auf "true" gesetzt ist, wird Gluon mit den für das Debugging des Build-Prozesses empfohlenen make-Optionen "-j1 V=s" gebaut. Standardwert ist "false".
-   - `VPN_TYPES`: Nur relevant für Freifunk Ingolstadt, sonst weglassen: Wahl der VPN-Techniken, für die Images gebaut werden sollen. Mögliche Werte siehe https://git.bingo-ev.de/freifunk/ffin-site/blob/master/site.mk
+   - `VPN_TYPES`: **Nur relevant für Freifunk Ingolstadt, sonst weglassen!** Wahl der VPN-Techniken, für die Images gebaut werden sollen. Mögliche Werte siehe https://git.bingo-ev.de/freifunk/ffin-site/blob/master/site.mk
 
-   Wenn Variablen zum Gluon-Build-Prozess durchgereicht werden sollen (siehe https://gluon.readthedocs.io/en/latest/user/site.html#user-site-build-configuration): Einfach auch in die config.env eintragen.
+
+   Sollen weitere Variablen zum Gluon-Build-Prozess durchgereicht werden sollen (siehe https://gluon.readthedocs.io/en/latest/user/site.html#user-site-build-configuration): Einfach auch in die config.env eintragen.
 
 3. `./start.sh` ausführen.
 
 Der Gluon-Quellcode wird ins Unterverzeichnis `./gluon` heruntergeladen und dort compiliert. Die fertigen Firmware-Images landen im Unterverzeichnis `./images`.
-Das Compilieren der Firmware für alle verfügbaren Targets dauert einige Stunden.
+Das erstmalige Compilieren der Firmware für alle verfügbaren Targets dauert einige Stunden.
