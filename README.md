@@ -7,7 +7,6 @@ Baut Gluon Firmware-Images für Freifunk in einem Docker-Container anhand einer 
 - mindestens 150 GByte freier Festplattenplatz
 
 ## Anleitung:
-
 1. `config.env.example` kopieren zu `config.env`
 2. `config.env` anpassen:
    ```
@@ -28,17 +27,17 @@ Baut Gluon Firmware-Images für Freifunk in einem Docker-Container anhand einer 
    **Erforderliche Variablen:**
    - `GLUON_GIT_URL`: URL zum Git-Repository von Gluon, z.B. für das offizielle Gluon-Repository: "https://github.com/freifunk-gluon/gluon.git"
    - `GLUON_GIT_BRANCH`: zu verwendender Branch/Tag im Gluon-Repository, z.B. "v2019.2", "v2020.1.2", "master", "next",...
-   - `SITE_GIT_URL`: URL zum Git-Repository der Site-Konfiguration deiner Freifunk-Community
-   - `SITE_GIT_BRANCH`: zu verwendender Branch im Git-Repository der Site-Konfiguration
+   - `SITE_GIT_URL`: URL zum Git-Repository der Site-Konfiguration deiner Freifunk-Community (z.B. für Ingolstadt "http://git.bingo-ev.de/freifunk/ffin-site.git")
+   - `SITE_GIT_BRANCH`: zu verwendender Branch im Git-Repository der Site-Konfiguration, z.B. "master", "2020.1",...)
 
    **Optionale Variablen:**
    - `MANIFEST_BRANCHES` und `ECDSA_PRIVATE_KEYS`: Wenn "MANIFEST_BRANCHES" gesetzt ist werden die entsprechenden Manifest-Dateien für den Autoupdater mit der angegebenen Autoupdater-Priorität erstellt und, wenn "ECDSA_PRIVATE_KEYS" gesetzt ist, mit dem/den dort angegebenen Key(s) signiert.
    - `TARGETS`: Hier können die Targets (z.B. "ath79-generic ramips-mt76x8") angegeben werden, für die Images gebaut werden sollen. Fehlt die Variable oder ist sie auf "all" gesetzt, werden Images für alle verfügbaren Targets erstellt.
    - `DEBUG`: Wenn "DEBUG" auf "true" gesetzt ist, wird Gluon mit den für das Debugging des Build-Prozesses empfohlenen make-Optionen "-j1 V=s" gebaut. Standardwert ist "false".
-   - `VPN_TYPES`: **Nur relevant für Freifunk Ingolstadt, sonst weglassen!** Wahl der VPN-Techniken, für die Images gebaut werden sollen. Mögliche Werte siehe https://git.bingo-ev.de/freifunk/ffin-site/blob/master/site.mk
+   - `VPN_TYPES`: **Nur relevant für Freifunk Ingolstadt, sonst weglassen!** Wahl der VPN-Techniken, für die Images gebaut werden sollen. Mögliche Werte siehe https://git.bingo-ev.de/freifunk/ffin-site/blob/master/site.mk, z.B. "l2tp fastd" wenn Images für L2TP und fastd gebaut werden sollen, oder "l2tp" wenn nur L2TP-Imahes aber keine fastd-Images gebaut werden sollen.
 
 
-   Sollen weitere Variablen zum Gluon-Build-Prozess durchgereicht werden sollen (siehe https://gluon.readthedocs.io/en/latest/user/site.html#user-site-build-configuration): Einfach auch in die config.env eintragen.
+   Falls weitere Variablen zum Gluon-Build-Prozess durchgereicht werden sollen (siehe https://gluon.readthedocs.io/en/latest/user/site.html#user-site-build-configuration): Einfach auch in die config.env eintragen.
 
 3. `./start.sh` ausführen.
 
